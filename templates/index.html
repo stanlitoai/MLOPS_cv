@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #image-upload {
+            display: none;
+        }
+
+        #predicted-label {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Classifier</h1>
+        <div class="image-container" onclick="document.getElementById('image-upload').click();">
+            <p>Click or drag & drop an image here</p>
+        </div>
+        <input type="file" id="image-upload" accept=".jpg, .jpeg, .png" onchange="loadImage(event)">
+        <div id="predicted-label"></div>
+        <button class="btn" onclick="classifyImage()">Classify</button>
+    </div>
+
+    <script>
+        function loadImage(event) {
+            const imageContainer = document.querySelector(".image-container");
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageContainer.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" width="200">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imageContainer.innerHTML = `<p>Click or drag & drop an image here</p>`;
+            }
+        }
+
+        function classifyImage() {
+            const formData = new FormData();
+            const fileInput = document.getElementById("image-upload");
+            formData.append("image", fileInput.files[0]);
+
+            fetch("/predict", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                const predictedLabel = document.getElementById("predicted-label");
+                predictedLabel.textContent = `Predicted Class: ${data}`;
+            })
+            .catch(error => console.error(error));
+        }
+    </script>
+</body>
+</html>
