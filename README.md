@@ -10,7 +10,7 @@
 8. update the main.py
 9. update the dvc.yaml
 
-
+NiQc483h0XEtApxeJhICGDsTzzUMYcVfd2dU6RjflF+ACRBcthXB
 
 docker build -t stanlitoapp.azurecr.io/mlapp:latest .
 
