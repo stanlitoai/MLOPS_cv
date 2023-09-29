@@ -9,3 +9,11 @@
 7. update the pipeline
 8. update the main.py
 9. update the dvc.yaml
+
+
+
+docker build -t stanlitoapp.azurecr.io/mlapp:latest .
+
+docker login stanlitoapp.azurecr.io
+
+docker push stanlitoapp.azurecr.io/mlapp:latest
